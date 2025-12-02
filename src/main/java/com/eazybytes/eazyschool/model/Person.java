@@ -5,10 +5,14 @@ import org.hibernate.annotations.GenericGenerator;
 import com.eazybytes.eazyschool.annotations.FieldsValueMatch;
 import com.eazybytes.eazyschool.annotations.PasswordValidator;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -73,16 +77,45 @@ public class Person extends BaseEntity{
     @Transient
     private String confirmPwd;
 
-//    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.PERSIST, targetEntity = Roles.class)
-//    @JoinColumn(name = "role_id", referencedColumnName = "roleId",nullable = false)
-//    private Roles roles;
+/*Whenever I'm trying to fetch the person record tables, does my spring data JPA should automatically 
+  fetch the child table records also or not that I can control with the help of FetchType.EAGER or 
+  FetchType.LAZY 
 
-//    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL, targetEntity = Address.class)
-//    @JoinColumn(name = "address_id", referencedColumnName = "addressId",nullable = true)
-//    private Address address;
+ CascadeType - Since we have a parent and child relationship? So I need to tell to my 
+ JPA any operation that you are doing on parent does that same needs to be cascaded to 
+ the child also? Suppose if I'm trying to delete my parent record, does my spring data JPA also need to
+ delete the child record also?
+ */
+    
+/* Why PERSIST -> whenever I'm saving a person, I want to save his roles also automatically because my
+   person has a not null foreign key reference with my   */
+    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.MERGE, targetEntity = Roles.class)
+    @JoinColumn(name = "role_id", referencedColumnName = "roleId",nullable = false)
+//    since this foreign key relationship is a mandatory between , I need to mention this nullable=false.
+    private Roles roles;
+
+    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL, targetEntity = Address.class)
+    @JoinColumn(name = "address_id", referencedColumnName = "addressId",nullable = true)
+    private Address address;
     
     
-    public int getPersonId() {
+    public Roles getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Roles roles) {
+		this.roles = roles;
+	}
+
+	public Address getAddress() {
+		return address;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+
+	public int getPersonId() {
   		return personId;
   	}
 
