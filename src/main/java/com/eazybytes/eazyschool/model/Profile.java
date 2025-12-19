@@ -1,28 +1,32 @@
 package com.eazybytes.eazyschool.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import lombok.Data;
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
 
 @Data
-@Entity
-public class Address extends BaseEntity{
+public class Profile {
 
-    @Id
-    @GeneratedValue(strategy= GenerationType.AUTO,generator="native")
-    @GenericGenerator(name = "native",strategy = "native")
-    private int addressId;
+    @NotBlank(message="Name must not be blank")
+    @Size(min=3, message="Name must be at least 3 characters long")
+    private String name;
+
+    @NotBlank(message="Mobile number must not be blank")
+    @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits")
+    private String mobileNumber;
+
+    @NotBlank(message="Email must not be blank")
+    @Email(message = "Please provide a valid email address" )
+    private String email;
 
     @NotBlank(message="Address1 must not be blank")
     @Size(min=5, message="Address1 must be at least 5 characters long")
     private String address1;
 
+    @Column(nullable=true)
     private String address2;
 
     @NotBlank(message="City must not be blank")
@@ -35,15 +39,30 @@ public class Address extends BaseEntity{
 
     @NotBlank(message="Zip Code must not be blank")
     @Pattern(regexp="(^$|[0-9]{5})",message = "Zip Code must be 5 digits")
-//    private int zipCode;
-    private String zipCode; //otherwise by default we have 0 here
+    private String zipCode; // if this is int them by default it will show 0
 
-	public int getAddressId() {
-		return addressId;
+	public String getName() {
+		return name;
 	}
 
-	public void setAddressId(int addressId) {
-		this.addressId = addressId;
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getAddress1() {
@@ -85,7 +104,5 @@ public class Address extends BaseEntity{
 	public void setZipCode(String zipCode) {
 		this.zipCode = zipCode;
 	}
-
-	
-
+    
 }

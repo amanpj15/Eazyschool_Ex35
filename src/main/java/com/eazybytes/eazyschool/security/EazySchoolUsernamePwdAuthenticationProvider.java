@@ -38,8 +38,10 @@ public class EazySchoolUsernamePwdAuthenticationProvider
         		passwordEncoder.matches(pwd,person.getPwd())) {
 //            pwd.equals(person.getPwd())){ instead of this write 
         	
+//        	post authentication we are setting the name of the user in the 
+//        	auth obj insted of that populate email
             return new UsernamePasswordAuthenticationToken(
-                    person.getName(), pwd, getGrantedAuthorities(person.getRoles()));
+                    email, pwd, getGrantedAuthorities(person.getRoles()));
 // Whatever we are passing in first paramater will display post login            
         }
         else

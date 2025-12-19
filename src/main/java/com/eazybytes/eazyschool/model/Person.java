@@ -89,7 +89,7 @@ public class Person extends BaseEntity{
     
 /* Why PERSIST -> whenever I'm saving a person, I want to save his roles also automatically because my
    person has a not null foreign key reference with my   */
-    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.MERGE, targetEntity = Roles.class)
+    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.PERSIST, targetEntity = Roles.class)
     @JoinColumn(name = "role_id", referencedColumnName = "roleId",nullable = false)
 //    since this foreign key relationship is a mandatory between , I need to mention this nullable=false.
     private Roles roles;
