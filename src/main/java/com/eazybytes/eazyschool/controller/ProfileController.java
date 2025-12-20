@@ -56,11 +56,11 @@ public class ProfileController {
         person.getAddress().setZipCode(profile.getZipCode());
         System.out.println("Before saved person");
 //        Person savedPerson = personRepository.save(person);
-        personRepository.save(person);
+        Person savedPerson = personRepository.save(person);
 // once we store the info the DB, we we need to store the latest Pojo again into the 
 // session because post this operation, user can go back again to the dashboard he can 
 // come back to the profile web page or he can go to any other controller or web pages.
-        session.setAttribute("loggedInPerson", person);
+        session.setAttribute("loggedInPerson", savedPerson);
         return "redirect:/displayProfile";
     }
 	
