@@ -20,7 +20,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Data
 @Entity
 //Here we are defining what will be the field 1 and field 2 name
@@ -83,10 +87,9 @@ public class Person extends BaseEntity{
   fetch the child table records also or not that I can control with the help of FetchType.EAGER or 
   FetchType.LAZY 
 
- CascadeType - Since we have a parent and child relationship? So I need to tell to my 
- JPA any operation that you are doing on parent does that same needs to be cascaded to 
- the child also? Suppose if I'm trying to delete my parent record, does my spring data JPA also need to
- delete the child record also?
+ CascadeType - Since we have a parent and child relationship? So I need to tell to my JPA any operation
+ that u r doing on parent does that same needs to be cascaded to the child also? Suppose if I'm trying 
+ to delete my parent record, does my spring data JPA also need to delete the child record also?
  */
     
 /* Why PERSIST -> whenever I'm saving a person, I want to save his roles also automatically because my
@@ -103,9 +106,8 @@ public class Person extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "class_id", referencedColumnName = "classId", nullable = true)
     private EazyClass eazyClass;
-    
-    
-    public Roles getRoles() {
+
+	public Roles getRoles() {
 		return roles;
 	}
 
@@ -176,4 +178,8 @@ public class Person extends BaseEntity{
   	public void setConfirmPwd(String confirmPwd) {
   		this.confirmPwd = confirmPwd;
   	}
+
+	public void setEazyClass(EazyClass eazyClass) {
+		this.eazyClass = eazyClass;
+	}
 }

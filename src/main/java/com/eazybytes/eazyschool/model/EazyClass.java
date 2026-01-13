@@ -37,4 +37,28 @@ public class EazyClass extends BaseEntity {
     If I'm trying to unnecessarily load all the 1000 students at a time, 
     whenever I'm trying to load the class details ->create a performance problem.*/
 
+	public int getClassId() {
+		return classId;
+	}
+
+	public void setClassId(int classId) {
+		this.classId = classId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Set<Person> getPersons() {
+		return persons;
+	}
+
+	public void setPersons(Set<Person> persons) {
+		this.persons = persons;
+	}
+
 }
