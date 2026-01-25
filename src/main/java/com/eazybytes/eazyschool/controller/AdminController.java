@@ -79,51 +79,49 @@ public class AdminController {
         ModelAndView modelAndView = new ModelAndView("redirect:/admin/displayClasses");
         return modelAndView;
     }
-
+    
     @GetMapping("/displayStudents")
-    public ModelAndView displayStudents(Model model, @RequestParam int classId) {
-        ModelAndView modelAndView = new ModelAndView("students.html");
-      Optional<EazyClass> eazyClass = eazyClassRepository.findById(classId);
+    public ModelAndView displayStudents(Model model, @RequestParam int classId, HttpSession session,
+    									@RequestParam(value = "error", required = false) String error) {
+	  String errorMessage = null;
+      ModelAndView modelAndView = new ModelAndView("students.html"); // false->not reqd in all cases 
+      Optional<EazyClass> eazyClass = eazyClassRepository.findById(classId); // session me store
 //    Once I have this EasyClass object, I'm trying to send the same to my UI by adding
 //    an object with the name EasyClass and using .get() due to Optional 
       modelAndView.addObject("eazyClass",eazyClass.get()); // -> to display current class name
       modelAndView.addObject("person",new Person()); 
 //    Tie up the data from the form and sending it to backend      
+      session.setAttribute("eazyClass", eazyClass.get());
+     
+      if(error != null) {
+        errorMessage = "Invalid Email entered!!";
+        modelAndView.addObject("errorMessage", errorMessage);
+    }
         return modelAndView;
     }
-//    @GetMapping("/displayStudents")
-//    public ModelAndView displayStudents(Model model, @RequestParam int classId, HttpSession session,
-//                                        @RequestParam(value = "error", required = false) String error) {
-//        String errorMessage = null;
-//        ModelAndView modelAndView = new ModelAndView("students.html");
-//        Optional<EazyClass> eazyClass = eazyClassRepository.findById(classId);
-//        modelAndView.addObject("eazyClass",eazyClass.get());
-//        modelAndView.addObject("person",new Person());
-//        session.setAttribute("eazyClass",eazyClass.get());
-//        if(error != null) {
-//            errorMessage = "Invalid Email entered!!";
-//            modelAndView.addObject("errorMessage", errorMessage);
-//        }
-//        return modelAndView;
-//    }
 
-//    @PostMapping("/addStudent")
-//    public ModelAndView addStudent(Model model, @ModelAttribute("person") Person person, HttpSession session) {
-//        ModelAndView modelAndView = new ModelAndView();
-//        EazyClass eazyClass = (EazyClass) session.getAttribute("eazyClass");
-//        Person personEntity = personRepository.readByEmail(person.getEmail());
-//        if(personEntity==null || !(personEntity.getPersonId()>0)){
-//            modelAndView.setViewName("redirect:/admin/displayStudents?classId="+eazyClass.getClassId()
-//                    +"&error=true");
-//            return modelAndView;
-//        }
-//        personEntity.setEazyClass(eazyClass);
-//        personRepository.save(personEntity);
-//        eazyClass.getPersons().add(personEntity);
-//        eazyClassRepository.save(eazyClass);
-//        modelAndView.setViewName("redirect:/admin/displayStudents?classId="+eazyClass.getClassId());
-//        return modelAndView;
-//    }
+    /*So now inside 2nd param that I'm receiving from the frontend, I will have only the email of the Person.
+     * post that we are fetching student details on the basis of email
+     * If there is a Person, 'personEntity' will be not null & vice versa.
+     */
+    @PostMapping("/addStudent")
+    public ModelAndView addStudent(Model model, @ModelAttribute("person") Person person, HttpSession session) {
+        ModelAndView modelAndView = new ModelAndView();
+        EazyClass eazyClass = (EazyClass) session.getAttribute("eazyClass");
+        Person personEntity = personRepository.readByEmail(person.getEmail());
+        if(personEntity==null || !(personEntity.getPersonId()>0)){ // since we are passing query params
+//        											we have to add that inside the /displayStudents
+            modelAndView.setViewName("redirect:/admin/displayStudents?classId="+eazyClass.getClassId()
+                    +"&error=true"); // error->email entered is not valid
+            return modelAndView;
+        }
+        personEntity.setEazyClass(eazyClass);
+        personRepository.save(personEntity);
+        eazyClass.getPersons().add(personEntity);
+        eazyClassRepository.save(eazyClass);
+        modelAndView.setViewName("redirect:/admin/displayStudents?classId="+eazyClass.getClassId());
+        return modelAndView;
+    }
 
 //    @GetMapping("/deleteStudent")
 //    public ModelAndView deleteStudent(Model model, @RequestParam int personId, HttpSession session) {

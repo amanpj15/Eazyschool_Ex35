@@ -103,9 +103,9 @@ public class Person extends BaseEntity{
     @JoinColumn(name = "address_id", referencedColumnName = "addressId",nullable = true)
     private Address address;
     
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)// not defining Cascade bcoz we are always creating class first then we are adding person into it
     @JoinColumn(name = "class_id", referencedColumnName = "classId", nullable = true)
-    private EazyClass eazyClass;
+    private EazyClass eazyClass; // the same name we have to use in the EazyClass to create connection
 
 	public Roles getRoles() {
 		return roles;

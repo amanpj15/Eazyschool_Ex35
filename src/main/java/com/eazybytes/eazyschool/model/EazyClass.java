@@ -31,7 +31,7 @@ public class EazyClass extends BaseEntity {
     
                // same as we've declared in the Person 
     @OneToMany(mappedBy = "eazyClass", fetch = FetchType.LAZY,
-            cascade = CascadeType.PERSIST,targetEntity = Person.class)
+            cascade = CascadeType.PERSIST,targetEntity = Person.class) //target - we need to tell the child entity class
     private Set<Person> persons; // A class can have multiple persons
 /*  Reason for lazy by default is suppose a class has 1000 persons/students.
     If I'm trying to unnecessarily load all the 1000 students at a time, 
